@@ -325,3 +325,8 @@ class TaskProcess(multiprocessing.Process):
             succeeded = False
 
         self.status_queue.put(succeeded)
+        self.status_queue.close()
+        self.status_queue.join_thread()
+
+        self.event_queue.close()
+        self.event_queue.join_thread()

@@ -8,13 +8,14 @@ from .. import config, pipelines
 
 
 def run_pipeline(pipeline: pipelines.Pipeline, nodes: {pipelines.Node} = None,
-                 with_upstreams: bool = False) -> bool:
+                 with_upstreams: bool = False, debug: bool = True) -> bool:
     """
     Runs a pipeline or parts of it with output printed to stdout
     Args:
         pipeline: The pipeline to run
         nodes: A list of pipeline children that should run
         with_upstreams: When true and `nodes` are provided, then all upstreams of `nodes` in `pipeline` are also run
+        debug: When true, it will show event outputs in command line
     Return:
         True when the pipeline run succeeded
     """
@@ -23,7 +24,7 @@ def run_pipeline(pipeline: pipelines.Pipeline, nodes: {pipelines.Node} = None,
 
     succeeded = True
     for event in execution.run_pipeline(pipeline, nodes, with_upstreams):
-        if isinstance(event, events.Output):
+        if isinstance(event, events.Output) and debug:
             print(f'\033[36m{" / ".join(event.node_path)}{":" if event.node_path else ""}\033[0m '
                   + {logger.Format.STANDARD: '\033[01m',
                      logger.Format.ITALICS: '\033[02m',
